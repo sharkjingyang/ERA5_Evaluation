@@ -1,8 +1,11 @@
 """
-Download minimal data for evaluating 2 init times on 2020-01-01 at 64x32.
+Download data for evaluating HRES on 2020-01-01 at 64x32 resolution.
 
-Forecast valid times: 2020-01-01 06:00 → 2020-01-11 12:00 (40 lead steps × 6h)
-Total download: ~200-500 MB (all variables), ~5-20 MB (single variable)
+Downloads:
+  - HRES forecast: 2 init times (00:00 and 12:00 UTC), 40 lead steps x 6h = 10 days (~57 MB)
+  - ERA5 obs: 2020-01-01 ~ 2020-01-12, covers all forecast valid times (~33 MB)
+  - ERA5 climatology: 1990-2019 full year, required for ACC (~852 MB, cannot be sliced)
+Total: ~1 GB
 """
 import os
 import xarray as xr
