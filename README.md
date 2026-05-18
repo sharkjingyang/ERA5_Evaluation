@@ -1,59 +1,68 @@
+# WeatherBench2 Evaluation
 
-![logo](docs/source/_static/wb2-logo-wide.png)
+## 快速开始：64×32 单日评测
 
-[![CI](https://github.com/google-research/weatherbench2/actions/workflows/ci-build.yml/badge.svg)](https://github.com/google-research/weatherbench2/actions/workflows/ci-build.yml)
-[![Lint](https://github.com/google-research/weatherbench2/actions/workflows/lint.yml/badge.svg)](https://github.com/google-research/weatherbench2/actions/workflows/lint.yml)
-[![Documentation Status](https://readthedocs.org/projects/weatherbench2/badge/?version=latest)](https://weatherbench2.readthedocs.io/en/latest/?badge=latest)
-<a target="_blank" href="https://colab.research.google.com/github/google-research/weatherbench2/blob/main/docs/source/evaluation.ipynb">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
-</a>
+### 1. 安装依赖
 
-# WeatherBench 2 - A benchmark for the next generation of data-driven global weather models
-
-**🚨🚨🚨 [WeatherBench-X](https://github.com/google-research/weatherbenchX) has been released. It provides an updated version of our evaluation code base. We encourage users to switch to the new codebase. The [data guide] (https://weatherbench2.readthedocs.io/en/latest/data-guide.html) is still up-to-date. 🚨🚨🚨**
-
-[arXiv paper](https://arxiv.org/abs/2308.15560)   
-[Google AI Blog post](http://ai.googleblog.com/2023/08/weatherbench-2-benchmark-for-next.html)
-
-## Why WeatherBench?
-
-WeatherBench 2 is a framework for evaluating and comparing data-driven and traditional numerical weather forecasting models. WeatherBench consists of:
-- Publicly available, cloud-optimized ground truth and baseline datasets. For a complete list, see [this page](https://weatherbench2.readthedocs.io/en/latest/data-guide.html). 
-- Open-source evaluation code. See this [quick-start](https://weatherbench2.readthedocs.io/en/latest/evaluation.html) to explore the basic functionality or the [API docs](https://weatherbench2.readthedocs.io/en/latest/api.html) for more detail. Since high-resolution forecast files can be large, the WeatherBench 2 code was written with scalability in mind. See the [command-line scripts](https://weatherbench2.readthedocs.io/en/latest/command-line-scripts.html) based on [Xarray-Beam](https://xarray-beam.readthedocs.io/en/latest/) and [this guide](https://weatherbench2.readthedocs.io/en/latest/beam-in-the-cloud.html) for running the scripts on GCP using [DataFlow](https://cloud.google.com/dataflow).
-- A [website](https://sites.research.google/weatherbench) displaying up-to-date scores of many of the state-of-the-art data-driven and physical approaches.
-- A [paper](https://arxiv.org/abs/2308.15560) describing the rationale behind the evaluation setup.
-
-WeatherBench 2 has been built as an evolving tool for the entire community. For this reason, we welcome any feedback (ideally, submitted as [GitHub issues](https://github.com/google-research/weatherbench2/issues)) or contributions. If you would like you model to be part of WeatherBench, check out [this guide](https://weatherbench2.readthedocs.io/en/latest/submit.html).
-
-
-## Citation
-```
-@misc{rasp2023weatherbench,
-      title={WeatherBench 2: A benchmark for the next generation of data-driven global weather models}, 
-      author={Stephan Rasp and Stephan Hoyer and Alexander Merose and Ian Langmore and Peter Battaglia and Tyler Russel and Alvaro Sanchez-Gonzalez and Vivian Yang and Rob Carver and Shreya Agrawal and Matthew Chantry and Zied Ben Bouallegue and Peter Dueben and Carla Bromberg and Jared Sisk and Luke Barrington and Aaron Bell and Fei Sha},
-      year={2023},
-      eprint={2308.15560},
-      archivePrefix={arXiv},
-      primaryClass={physics.ao-ph}
-}
+```bash
+pip install -e ".[tests]"
 ```
 
-## License
+### 2. 下载数据
 
-This is not an official Google product.
+运行以下脚本，下载 2020-01-01 所需的最小数据集（约 1 GB）：
 
+```bash
+python download_minimal.py
 ```
-Copyright 2023 Google LLC
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+下载内容：
+- HRES 预报：2020-01-01 00:00 和 12:00 两个初始化时刻（57 MB）
+- ERA5 观测：2020-01-01 ~ 2020-01-12（33 MB）
+- ERA5 气候态：1990-2019 全年（852 MB，用于 ACC 计算）
 
-    https://www.apache.org/licenses/LICENSE-2.0
+### 3. 运行评测
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+```bash
+python scripts/evaluate.py \
+  --forecast_path=./local_data_minimal/hres_20200101_64x32.zarr \
+  --obs_path=./local_data_minimal/era5_20200101_64x32.zarr \
+  --climatology_path=./local_data_minimal/climatology_1990-2019_64x32.zarr \
+  --output_dir=./output_minimal/ \
+  --output_file_prefix=hres_20200101_ \
+  --input_chunks=init_time=1 \
+  --eval_configs=deterministic \
+  --time_start=2020-01-01 \
+  --time_stop=2020-01-01 \
+  --variables=geopotential,temperature,u_component_of_wind,v_component_of_wind,specific_humidity,2m_temperature,10m_u_component_of_wind,10m_v_component_of_wind,mean_sea_level_pressure
 ```
+
+结果保存至 `./output_minimal/hres_20200101_deterministic.nc`。
+
+### 参数说明
+
+| 参数 | 说明 |
+|------|------|
+| `--forecast_path` | 预报模型数据路径（zarr 格式） |
+| `--obs_path` | 观测/真值数据路径（ERA5） |
+| `--climatology_path` | 气候态路径，用于计算 ACC |
+| `--output_dir` | 结果输出目录 |
+| `--output_file_prefix` | 输出文件名前缀 |
+| `--input_chunks` | 数据读取分块大小，控制内存用量 |
+| `--eval_configs` | 评测配置，`deterministic` 包含 MSE/ACC/Bias/MAE |
+| `--time_start/stop` | 初始化时刻的筛选范围 |
+| `--variables` | 待评测变量列表，逗号分隔 |
+
+### 变量名对照
+
+| 常用缩写 | WeatherBench2 变量名 |
+|---------|---------------------|
+| z | `geopotential` |
+| t | `temperature` |
+| u | `u_component_of_wind` |
+| v | `v_component_of_wind` |
+| q | `specific_humidity` |
+| t2m | `2m_temperature` |
+| u10m | `10m_u_component_of_wind` |
+| v10m | `10m_v_component_of_wind` |
+| msl | `mean_sea_level_pressure` |
