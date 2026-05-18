@@ -1,4 +1,7 @@
 output_test/
+output_minimal/
+local_data_minimal/
+local_data/
 *.egg-info
 .DS_Store
 build
