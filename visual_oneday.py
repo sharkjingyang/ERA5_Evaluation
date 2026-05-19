@@ -4,19 +4,22 @@ Visualize HRES 2020-01-01 evaluation results for both resolutions.
 Usage:
   python visual_oneday.py
 
-Output (saved to ./output_minimal/):
+Output (saved to ./plots/):
   acc_oneday.png      — ACC for 3D variables at key pressure levels
   mse_oneday.png      — MSE for 3D variables at key pressure levels
   surface_oneday.png  — ACC / MSE / Bias for surface variables
 """
+import os
 import matplotlib.pyplot as plt
 from weatherbench2.visualization import load_results, plot_timeseries, set_wb2_style
 
 RESULTS_PATHS = {
-    'HRES 64x32':   './output_minimal/hres_20200101_64x32_deterministic.nc',
-    'HRES 240x121': './output_minimal/hres_20200101_240x121_deterministic.nc',
+    'HRES 64x32':   './data_oneday/eval_output/hres_20200101_64x32_deterministic.nc',
+    'HRES 240x121': './data_oneday/eval_output/hres_20200101_240x121_deterministic.nc',
 }
-OUT_DIR = './output_minimal'
+OUT_DIR = './plots'
+
+os.makedirs(OUT_DIR, exist_ok=True)
 
 set_wb2_style()
 results = load_results(RESULTS_PATHS)

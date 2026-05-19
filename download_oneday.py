@@ -2,9 +2,9 @@
 Download data for evaluating HRES on 2020-01-01.
 
 Usage:
-  python download_eval_oneday.py           # default: 64x32
-  python download_eval_oneday.py 240x121
-  python download_eval_oneday.py 64x32
+  python download_oneday.py           # default: 64x32
+  python download_oneday.py 240x121
+  python download_oneday.py 64x32
 
 Downloads:
   - HRES forecast: 2 init times (00:00 and 12:00 UTC), 40 lead steps x 6h = 10 days
@@ -61,7 +61,7 @@ if RESOLUTION not in GCS_CONFIGS:
 
 cfg = GCS_CONFIGS[RESOLUTION]
 STORAGE_OPTS = {'token': 'anon'}
-OUT_DIR = './local_data_minimal'
+OUT_DIR = './data_oneday'
 os.makedirs(OUT_DIR, exist_ok=True)
 
 VARIABLES = [

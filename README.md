@@ -13,7 +13,7 @@ pip install -e ".[tests]"
 ### 2. 下载数据
 
 ```bash
-python download_eval_oneday.py
+python download_oneday.py
 ```
 
 下载内容（共约 679 MB）：
@@ -28,10 +28,10 @@ python download_eval_oneday.py
 
 ```bash
 python scripts/evaluate.py \
-  --forecast_path=./local_data_minimal/hres_20200101_64x32.zarr \
-  --obs_path=./local_data_minimal/era5_20200101_64x32.zarr \
-  --climatology_path=./local_data_minimal/climatology_1990-2019_64x32.zarr \
-  --output_dir=./output_minimal/ \
+  --forecast_path=./data_oneday/hres_20200101_64x32.zarr \
+  --obs_path=./data_oneday/era5_20200101_64x32.zarr \
+  --climatology_path=./data_oneday/climatology_1990-2019_64x32.zarr \
+  --output_dir=./data_oneday/eval_output/ \
   --output_file_prefix=hres_20200101_ \
   --input_chunks=init_time=1 \
   --eval_configs=deterministic \
@@ -40,7 +40,7 @@ python scripts/evaluate.py \
   --variables=geopotential,temperature,u_component_of_wind,v_component_of_wind,specific_humidity,2m_temperature,10m_u_component_of_wind,10m_v_component_of_wind,mean_sea_level_pressure
 ```
 
-结果保存至 `./output_minimal/hres_20200101_deterministic.nc`。
+结果保存至 `./data_oneday/eval_output/hres_20200101_deterministic.nc`。
 
 ### 参数说明
 
@@ -77,7 +77,7 @@ python scripts/evaluate.py \
 ### 1. 下载数据
 
 ```bash
-python download_eval_oneday.py 240x121
+python download_oneday.py 240x121
 ```
 
 下载内容（共约 1.3 GB）：
@@ -92,10 +92,10 @@ python download_eval_oneday.py 240x121
 
 ```bash
 python scripts/evaluate.py \
-  --forecast_path=./local_data_minimal/hres_20200101_240x121.zarr \
-  --obs_path=./local_data_minimal/era5_20200101_240x121.zarr \
-  --climatology_path=./local_data_minimal/climatology_1990-2019_240x121.zarr \
-  --output_dir=./output_minimal/ \
+  --forecast_path=./data_oneday/hres_20200101_240x121.zarr \
+  --obs_path=./data_oneday/era5_20200101_240x121.zarr \
+  --climatology_path=./data_oneday/climatology_1990-2019_240x121.zarr \
+  --output_dir=./data_oneday/eval_output/ \
   --output_file_prefix=hres_20200101_240x121_ \
   --input_chunks=init_time=1 \
   --eval_configs=deterministic \
@@ -104,7 +104,7 @@ python scripts/evaluate.py \
   --variables=geopotential,temperature,u_component_of_wind,v_component_of_wind,specific_humidity,2m_temperature,10m_u_component_of_wind,10m_v_component_of_wind,mean_sea_level_pressure
 ```
 
-结果保存至 `./output_minimal/hres_20200101_240x121_deterministic.nc`。
+结果保存至 `./data_oneday/eval_output/hres_20200101_240x121_deterministic.nc`。
 
 ---
 
@@ -116,7 +116,7 @@ python scripts/evaluate.py \
 python visual_oneday.py
 ```
 
-输出三张图（保存至 `./output_minimal/`）：
+输出三张图（保存至 `./plots/`）：
 
 | 文件 | 内容 |
 |------|------|

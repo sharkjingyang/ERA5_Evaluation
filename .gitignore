@@ -1,7 +1,9 @@
 output_test/
 output_minimal/
+output/
 local_data_minimal/
 local_data/
+data_oneday/
 .claude/
 *.egg-info
 .DS_Store
