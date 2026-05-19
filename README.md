@@ -110,7 +110,7 @@ python scripts/evaluate.py \
 
 ## 可视化
 
-两个分辨率的评测结果均完成后，运行：
+至少完成一个分辨率的评测后，运行：
 
 ```bash
 python visual_oneday.py

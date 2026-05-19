@@ -10,25 +10,51 @@ pip install -e ".[tests]"
 
 For GCP/Dataflow support: `pip install -e ".[tests,gcp]"`
 
-## Commands
+## 单日评测工作流（2020-01-01）
 
-### Testing
+### 1. 下载数据
 
 ```shell
-# Run all weatherbench2 package tests
-pytest weatherbench2/
-
-# Run a single test file
-pytest weatherbench2/metrics_test.py
-
-# Run all scripts tests (must be separate processes due to flag conflicts)
-for test in scripts/*_test.py; do pytest $test; done
-
-# Run a single script test
-pytest scripts/evaluate_test.py
+python download_oneday.py           # 64x32（默认）
+python download_oneday.py 240x121   # 240x121
 ```
 
-### Linting / Formatting
+### 2. 运行评测
+
+```shell
+python scripts/evaluate.py \
+  --forecast_path=./data_oneday/hres_20200101_64x32.zarr \
+  --obs_path=./data_oneday/era5_20200101_64x32.zarr \
+  --climatology_path=./data_oneday/climatology_1990-2019_64x32.zarr \
+  --output_dir=./data_oneday/eval_output/ \
+  --output_file_prefix=hres_20200101_ \
+  --input_chunks=init_time=1 \
+  --eval_configs=deterministic \
+  --time_start=2020-01-01 --time_stop=2020-01-01 \
+  --variables=geopotential,temperature,u_component_of_wind,v_component_of_wind,specific_humidity,2m_temperature,10m_u_component_of_wind,10m_v_component_of_wind,mean_sea_level_pressure
+```
+
+### 3. 可视化
+
+```shell
+python visual_oneday.py   # 至少一个分辨率的 nc 结果存在即可运行
+```
+
+## 目录结构
+
+```
+data_oneday/               # gitignore — 不上传
+  *.zarr                   # 下载的原始数据
+  eval_output/
+    *_deterministic.nc     # 评测结果
+
+plots/                     # git 追踪 — 会上传
+  acc_oneday.png
+  mse_oneday.png
+  surface_oneday.png
+```
+
+## Linting / Formatting
 
 ```shell
 pyink .        # format with pyink (Google-style, 2-space indent)
@@ -80,4 +106,4 @@ Each script is a standalone `absl` app runnable locally or on GCP Dataflow:
 
 **Eval config is composable**: Build an `Eval` object with a dict of named metrics and optional dict of named regions; `evaluation.evaluate_in_memory()` or the Beam pipeline iterates all metric × region combinations.
 
-**Scripts run locally or on Dataflow**: Pass `--use_beam=False` (default) for local; `--use_beam=True --runner=DataflowRunner` for GCP. `conftest.py` initializes `absl.app` flags so pytest can import script modules without flag errors.
+**Scripts run locally or on Dataflow**: Pass `--use_beam=False` (default) for local; `--use_beam=True --runner=DataflowRunner` for GCP.

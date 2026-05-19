@@ -21,10 +21,18 @@ OUT_DIR = './plots'
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
-set_wb2_style()
-results = load_results(RESULTS_PATHS)
+available = {k: v for k, v in RESULTS_PATHS.items() if os.path.exists(v)}
+if not available:
+    raise FileNotFoundError(
+        'No result files found. Run scripts/evaluate.py first.'
+    )
+print(f'Loading: {list(available)}')
 
-LINESTYLES = {'HRES 64x32': '-', 'HRES 240x121': '--'}
+_ALL_LINESTYLES = {'HRES 64x32': '-', 'HRES 240x121': '--'}
+
+set_wb2_style()
+results = load_results(available)
+LINESTYLES = {k: v for k, v in _ALL_LINESTYLES.items() if k in available}
 
 
 def make_fig(nrows, ncols, title):
