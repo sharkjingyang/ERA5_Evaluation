@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weatherbench2"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+  "xarray",
+  "numpy",
+  "pandas",
+  "scipy",
+  "fsspec",
+  "gcsfs",
+  "zarr",
+  "dask",
+]
+
+[project.optional-dependencies]
+tests = ["pytest", "absl-py"]
+gcp = ["apache-beam[gcp]"]
+
+[tool.setuptools.packages.find]
+include = ["weatherbench2*"]
+
+[tool.pyink]
+line-length = 80
+preview = true
+pyink-indentation = 2
+pyink-use-majority-quotes = true
