@@ -24,7 +24,7 @@ results = load_results(RESULTS_PATHS)
 
 def save_fig(fig, filename):
     path = f'{OUT_DIR}/{filename}'
-    fig.savefig(path, dpi=150, bbox_inches='tight')
+    fig.savefig(path, dpi=150, bbox_inches='tight', facecolor='white')
     plt.close(fig)
     print(f'Saved -> {path}')
 
