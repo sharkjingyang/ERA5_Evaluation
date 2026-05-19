@@ -105,3 +105,23 @@ python scripts/evaluate.py \
 ```
 
 结果保存至 `./output_minimal/hres_20200101_240x121_deterministic.nc`。
+
+---
+
+## 可视化
+
+两个分辨率的评测结果均完成后，运行：
+
+```bash
+python visual_oneday.py
+```
+
+输出三张图（保存至 `./output_minimal/`）：
+
+| 文件 | 内容 |
+|------|------|
+| `acc_oneday.png` | 6 个变量/层次的 ACC vs lead time |
+| `mse_oneday.png` | 6 个变量/层次的 MSE vs lead time |
+| `surface_oneday.png` | T2M / MSLP 的 ACC、MSE、Bias vs lead time |
+
+每张图中蓝色实线为 64×32，橙色虚线为 240×121。两个分辨率来自同一套 HRES 模型，评测指标基本一致。
