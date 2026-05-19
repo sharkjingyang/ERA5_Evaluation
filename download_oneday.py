@@ -70,14 +70,10 @@ VARIABLES = [
     'u_component_of_wind',
     'v_component_of_wind',
     'specific_humidity',
-    'wind_speed',
     '2m_temperature',
     '10m_u_component_of_wind',
     '10m_v_component_of_wind',
-    '10m_wind_speed',
     'mean_sea_level_pressure',
-    'total_precipitation_6hr',
-    'total_precipitation_24hr',
 ]
 
 
