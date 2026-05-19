@@ -88,15 +88,13 @@ python download_eval_oneday.py 240x121
 | ERA5 观测 | 2020-01-01 ~ 2020-01-12（覆盖预报最长 10 天有效时刻） | ~120 MB |
 | ERA5 气候态 | 1990-2019，dayofyear 1-30（chunk 宽度为 30 天，`slice(1,12)` 会加载完整第一个 chunk） | ~1.2 GB |
 
-> **注**：与 64×32 不同，240×121 气候态文件名含 `_jan1-12`，表示仅含 dayofyear 1-30 的数据，已足够评测 10 天预报。
-
 ### 2. 运行评测
 
 ```bash
 python scripts/evaluate.py \
   --forecast_path=./local_data_minimal/hres_20200101_240x121.zarr \
   --obs_path=./local_data_minimal/era5_20200101_240x121.zarr \
-  --climatology_path=./local_data_minimal/climatology_1990-2019_240x121_jan1-12.zarr \
+  --climatology_path=./local_data_minimal/climatology_1990-2019_240x121.zarr \
   --output_dir=./output_minimal/ \
   --output_file_prefix=hres_20200101_240x121_ \
   --input_chunks=init_time=1 \

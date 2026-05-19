@@ -131,7 +131,7 @@ clim = select_vars(clim, VARIABLES)
 if cfg['clim_can_slice']:
     # 10-day forecast from 2020-01-01 covers valid times up to 2020-01-11 (dayofyear 1-11).
     clim = clim.sel(dayofyear=slice(1, 12))
-    out_clim = f'{OUT_DIR}/climatology_1990-2019_{RESOLUTION}_jan1-12.zarr'
+    out_clim = f'{OUT_DIR}/climatology_1990-2019_{RESOLUTION}.zarr'
 else:
     out_clim = f'{OUT_DIR}/climatology_1990-2019_{RESOLUTION}.zarr'
 clim = load_with_progress(clim)
